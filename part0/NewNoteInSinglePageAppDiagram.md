@@ -1,4 +1,4 @@
-%% ```mermaid
+```mermaid
 sequenceDiagram
     participant browser
     participant server
@@ -9,4 +9,4 @@ sequenceDiagram
     Note left of server: 201 created, server does not ask for a redirect
     server-->>browser: 201 status code {"message created"}
     deactivate server
-%% ```
+```
