@@ -1,3 +1,4 @@
+import Hello from "./Hello"
 
 const App = () => {
   console.log("Hello from the component")
@@ -10,6 +11,9 @@ const App = () => {
     <div>
       <h1>Hello World</h1>
       <p>The sum of {a} and {b} is {a+b}</p>
+      <Hello/>
+      <Hello/>
+      <Hello/>
     </div>
   )
 }
