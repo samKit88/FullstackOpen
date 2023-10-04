@@ -1,14 +1,14 @@
 // Header
 const Header = (props) => {
-  console.log(props);
+  // console.log(props);
   return (
     <h1>{props.course}</h1>
   );
 };
 
-// Content
-const Content = (props) => {
-  console.log(props);
+// Content parts 
+const Part = (props) => {
+  console.log(props.part1, props.exercises1)
   return (
     <>
       <p>
@@ -24,9 +24,21 @@ const Content = (props) => {
   );
 };
 
+// Content
+const Content = (props) => {
+  // console.log(props);
+  return (
+    <>
+      <Part part1={props.part1} exercises1={props.exercises1}/>
+      <Part part2={props.part2} exercises2={props.exercises2}/>
+      <Part part3={props.part3} exercises3={props.exercises3}/>
+    </>
+  );
+};
+
 // Total 
 const Total = (props) => {
-  console.log(props)
+  // console.log(props)
   return (
     <p>Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}</p>
   );
