@@ -4,18 +4,33 @@ const Titles = (props) => <h1> {props.title} </h1>
     
 const Buttons = ({name, handleClick}) => <button onClick={handleClick}> {name} </button>
 
-const Total = (props) => <p>{props.buttonName} {props.value}</p>
+const Display = (props) => <p>{props.name} {props.value}</p>
 
 const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0) 
+  const [total, setTotal] = useState(0)
 
-  const handleGoodClick = () => setGood(good + 1)
+  const handleGoodClick = () => {
+    const updateGood = good + 1
+    setGood(updateGood)
+    setTotal(updateGood + neutral + bad)
+  }
   
-  const handleNeutralClick = () => setNeutral(neutral + 1)
+  const handleNeutralClick = () => {
+    const updateNeutral = neutral + 1
+    setNeutral(updateNeutral)
+    setTotal(updateNeutral + good + bad)
+  }
   
-  const handleBadClick = () => setBad(bad + 1)
+  const handleBadClick = () => {
+    const updateBad = bad + 1
+    setBad(updateBad)
+    setTotal(updateBad + good + neutral)
+  }
+
+  let sum = good + bad + neutral
   
 
   return(
@@ -25,9 +40,12 @@ const App = () => {
       <Buttons name='neutral' handleClick={handleNeutralClick}/>
       <Buttons name='bad' handleClick={handleBadClick}/>
       <Titles title='statistics'/>
-      <Total buttonName='good' value={good}/>
-      <Total buttonName='neutral' value={neutral}/>
-      <Total buttonName='bad' value={bad}/>
+      <Display name='good' value={good}/>
+      <Display name='neutral' value={neutral}/>
+      <Display name='bad' value={bad}/>
+      <Display name = 'all' value={total}/>
+      <Display name = 'average' value={((good * 1) + (bad * -1))/sum}/> 
+      <Display name = 'positive' value={`${(good * 100)/sum} %`}/> 
     </div>
   )
 }
