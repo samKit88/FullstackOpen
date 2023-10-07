@@ -1,17 +1,25 @@
 import { useState } from "react";
 
-const Titles = (props) => <h1> {props.title} </h1>;
+const Title = ({title}) => <h1>{title}</h1>
 
-const Buttons = ({ name, handleClick }) => (
-  <button onClick={handleClick}> {name} </button>
-);
+      
+const Buttons = ({ name, handleClick }) => <button onClick={handleClick}> {name} </button>
 
-const Statistics = (props) => (
-  <p>
-    {props.name} {props.value}
-  </p>
-);
+const Statistics = ({ good, neutral, bad }) => {
+  let sum = good + bad + neutral;
 
+  if (!sum) return <p> No feedback given </p>;
+
+  return (
+    <div>
+      <p>good {good}</p>
+      <p>neutral {neutral}</p>
+      <p>bad {bad}</p>
+      <p>average {(good * 1 + bad * -1) / sum}</p>
+      <p>positive {`${(good * 100) / sum} %`}</p>
+    </div>
+  );
+};
 
 const App = () => {
   const [good, setGood] = useState(0);
@@ -37,21 +45,14 @@ const App = () => {
     setTotal(updateBad + good + neutral);
   };
 
-  let sum = good + bad + neutral;
-
   return (
     <div>
-      <Titles title="give feedback" />
+      <Title title='give feedback'/>
       <Buttons name="good" handleClick={handleGoodClick} />
       <Buttons name="neutral" handleClick={handleNeutralClick} />
       <Buttons name="bad" handleClick={handleBadClick} />
-      <Titles title="statistics" />
-      <Statistics name="good" value={good} />
-      <Statistics name="neutral" value={neutral} />
-      <Statistics name="bad" value={bad} />
-      <Statistics name="all" value={total} />
-      <Statistics name="average" value={(good * 1 + bad * -1) / sum} />
-      <Statistics name="positive" value={`${(good * 100) / sum} %`} />
+      <Title title='statistic'/>
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
 };
