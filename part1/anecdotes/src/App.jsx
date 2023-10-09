@@ -10,8 +10,6 @@ const Quote = ({ quote, vote }) => {
 };
 
 const Button = ({ handleClick, text }) => <button onClick={handleClick}> {text} </button>
-  
-
 
 const AnecdotesQuote = ({ quote, vote, handleQuote, handleVote }) => {
   return (
@@ -22,6 +20,16 @@ const AnecdotesQuote = ({ quote, vote, handleQuote, handleVote }) => {
     </>
   );
 };
+
+const AnecdoteMostVote = ({quote, vote}) => {
+  if (vote === 0) return <></>
+  return ( 
+    <>
+      <h2>Anecdote with the most votes</h2>
+      <Quote quote={quote} vote={vote} />
+    </>
+ );
+}
 
 const App = () => {
   const anecdotes = [
@@ -52,7 +60,14 @@ const App = () => {
 
   return (
     <div>
-      <AnecdotesQuote quote={anecdotes[selected]} vote={vote[selected]} handleQuote={handleQuote} handleVote={handleVote}/>
+      <AnecdotesQuote 
+          quote={anecdotes[selected]} 
+          vote={vote[selected]} 
+          handleQuote={handleQuote} 
+          handleVote={handleVote}/>
+      <AnecdoteMostVote 
+        quote={anecdotes[vote.indexOf(Math.max(...vote))]} 
+        vote={Math.max(...vote)} />
     </div>
   );
 };
