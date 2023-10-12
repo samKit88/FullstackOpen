@@ -1,5 +1,6 @@
 import Content from "./Content";
 import Header from "./Header";
+import Total from "./Total";
 
 const Course = ({ course }) => {
   console.log('course.............' , course.parts)
@@ -8,6 +9,7 @@ const Course = ({ course }) => {
       <>
         <Header name={course.name}/>
         <Content part={course.parts}/>
+        <Total part={course.parts}/>
       </>
     );
   }
