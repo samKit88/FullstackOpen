@@ -3,8 +3,6 @@ import Header from "./Header";
 import Total from "./Total";
 
 const Course = ({ course }) => {
-  console.log('course.............' , course.parts)
-
     return (  
       <>
         <Header name={course.name}/>

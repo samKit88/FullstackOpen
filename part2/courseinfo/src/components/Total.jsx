@@ -3,7 +3,7 @@ const Total = ({ part }) => {
     <p>
       <b>
         total of  {" "}
-        {part[0].exercises + part[1].exercises + part[2].exercises + part[3].exercises}
+        {part.reduce((acc,part) => acc + part.exercises, 0)}
         {" "}
         exercises
       </b>
