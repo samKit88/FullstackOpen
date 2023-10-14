@@ -15,12 +15,18 @@ const App = () => {
   const addPhone = (event) => {
     event.preventDefault();
 
-    const personObject = {
-      name: newName,
-    };
+    const found = persons.find((p) => p.name === newName);
 
-    setPersons(persons.concat(personObject));
-    setNewName("");
+    if (!found) {
+      const personObject = {
+        name: newName,
+      };
+
+      setPersons(persons.concat(personObject));
+      setNewName("");
+    } else {
+      alert(`${newName} is already added to phonebook`);
+    }
   };
 
   const handleNameChange = (event) => {
@@ -50,15 +56,3 @@ const App = () => {
 };
 
 export default App;
-
-// if (!found) {
-//   console.log("we didn't find any data:");
-//   const personObject = {
-//     name: newName,
-//   };
-
-//   setPersons(persons.concat(personObject));
-//   setNewName("");
-// } else {
-//   console.log("found else", found);
-// }
