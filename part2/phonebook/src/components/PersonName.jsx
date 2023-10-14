@@ -1,6 +1,8 @@
+const PersonName = ({ name, phoneNumber }) => (
+  <li>
+    {" "}
+    {name} {phoneNumber}
+  </li>
+);
 
-
-
-const PersonName = ({name}) => <li> {name} </li>
-
-export default PersonName
+export default PersonName;

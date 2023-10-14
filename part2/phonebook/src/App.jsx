@@ -6,11 +6,11 @@ import PersonName from "./components/PersonName";
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: "Arto Hellas" },
-    { name: "Ada Lovelace" },
+    { name: "Arto Hellas", phoneNumber: +251911000000 },
   ]);
 
   const [newName, setNewName] = useState("");
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
 
   const addPhone = (event) => {
     event.preventDefault();
@@ -20,10 +20,12 @@ const App = () => {
     if (!found) {
       const personObject = {
         name: newName,
+        phoneNumber: newPhoneNumber,
       };
 
       setPersons(persons.concat(personObject));
       setNewName("");
+      setNewPhoneNumber("");
     } else {
       alert(`${newName} is already added to phonebook`);
     }
@@ -31,6 +33,11 @@ const App = () => {
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
+  };
+
+  const handlePhoneNumber = (events) => {
+    console.log("number", events.target.value);
+    setNewPhoneNumber(events.target.value);
   };
 
   return (
@@ -41,6 +48,9 @@ const App = () => {
           name: <input value={newName} onChange={handleNameChange} />
         </div>
         <div>
+          number: <input value={newPhoneNumber} onChange={handlePhoneNumber} />
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
@@ -48,7 +58,11 @@ const App = () => {
       <Header title="Numbers" />
       <ul>
         {persons.map((person) => (
-          <PersonName key={person.name} name={person.name} />
+          <PersonName
+            key={person.name}
+            name={person.name}
+            phoneNumber={person.phoneNumber}
+          />
         ))}
       </ul>
     </div>
