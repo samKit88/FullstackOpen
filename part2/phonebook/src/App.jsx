@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+//services
+import phoneBook from "./services/phoneBook";
 
 //Components
 import Header from "./components/Header";
@@ -7,16 +10,17 @@ import PersonForm from "./components/PersonForm";
 import PersonsList from "./components/PersonsList";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
+  const [persons, setPersons] = useState([]);
 
   const [newName, setNewName] = useState("");
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [filterValue, setFilterValue] = useState("");
+
+  useEffect(() => {
+    phoneBook.getAll().then((initialValue) => {
+      setPersons(initialValue);
+    });
+  }, []);
 
   const addPhone = (event) => {
     event.preventDefault();
@@ -29,9 +33,13 @@ const App = () => {
         number: newPhoneNumber,
         id: persons.length + 1,
       };
-      setPersons(persons.concat(personObject));
-      setNewName("");
-      setNewPhoneNumber("");
+
+      phoneBook.create(personObject).then((createdObject) => {
+        console.log("created", createdObject);
+        setPersons(persons.concat(createdObject));
+        setNewName("");
+        setNewPhoneNumber("");
+      });
     } else {
       alert(`${newName} is already added to phonebook`);
     }
