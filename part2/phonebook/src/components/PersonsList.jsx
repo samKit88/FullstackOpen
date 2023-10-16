@@ -1,13 +1,13 @@
 import PersonName from "./PersonName";
 
-const PersonsList = ({ filteredPersons }) => {
+const PersonsList = ({ filteredPersons, handleDelete }) => {
   return (
     <ul>
       {filteredPersons.map((person) => (
         <PersonName
-          key={person.name}
-          name={person.name}
-          phoneNumber={person.number}
+          key={person.id}
+          person={person}
+          handleDelete={handleDelete}
         />
       ))}
     </ul>

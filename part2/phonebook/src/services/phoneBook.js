@@ -4,16 +4,24 @@ const baseUrl = "http://localhost:3001/persons";
 
 //getAll
 const getAll = () => {
-  const response = axios.get(baseUrl).then((response) => response.data);
-  return response;
+  const request = axios.get(baseUrl).then((response) => response.data);
+  return request;
 };
 
 //create
 const create = (newObject) => {
-  const response = axios
+  const request = axios
     .post(baseUrl, newObject)
     .then((response) => response.data);
-  return response;
+  return request;
 };
 
-export default { getAll, create };
+//delete
+const deletePerson = (id) => {
+  const request = axios
+    .delete(`${baseUrl}/${id}`)
+    .then((response) => response.data);
+  return request;
+};
+
+export default { getAll, create, deletePerson };

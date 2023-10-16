@@ -31,11 +31,9 @@ const App = () => {
       const personObject = {
         name: newName,
         number: newPhoneNumber,
-        id: persons.length + 1,
       };
 
       phoneBook.create(personObject).then((createdObject) => {
-        console.log("created", createdObject);
         setPersons(persons.concat(createdObject));
         setNewName("");
         setNewPhoneNumber("");
@@ -61,6 +59,16 @@ const App = () => {
     person.name.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
   );
 
+  const handleDelete = (id) => {
+    const findPerson = persons.find((p) => p.id === id);
+
+    if (window.confirm(`Delete ${findPerson.name}?`)) {
+      phoneBook.deletePerson(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+      });
+    }
+  };
+
   return (
     <div>
       <Header title="Phonebook" />
@@ -74,7 +82,10 @@ const App = () => {
         handlePhoneNumber={handlePhoneNumber}
       />
       <Header title="Numbers" />
-      <PersonsList filteredPersons={filteredPersons} />
+      <PersonsList
+        filteredPersons={filteredPersons}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };
