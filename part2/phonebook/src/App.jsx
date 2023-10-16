@@ -39,7 +39,22 @@ const App = () => {
         setNewPhoneNumber("");
       });
     } else {
-      alert(`${newName} is already added to phonebook`);
+      // alert(`${newName} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${found.name} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const newPerson = {
+          ...found,
+          number: newPhoneNumber,
+        };
+        phoneBook.updatePerson(found.id, newPerson).then((res) => {
+          setPersons(persons.map((p) => (p.id !== found.id ? p : res)));
+          setNewName("");
+          setNewPhoneNumber("");
+        });
+      }
     }
   };
 
