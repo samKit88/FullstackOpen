@@ -16,7 +16,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [filterValue, setFilterValue] = useState("");
-  const [succMessage, setSuccMessage] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("");
 
   useEffect(() => {
     phoneBook.getAll().then((initialValue) => {
@@ -40,10 +41,12 @@ const App = () => {
         setNewName("");
         setNewPhoneNumber("");
       });
-      setSuccMessage(`Added ${personObject.name}`);
+
+      setMessage(`Added ${personObject.name}`);
       setTimeout(() => {
-        setSuccMessage(null);
+        setMessage(null);
       }, 5000);
+      setMessageType("success");
     } else {
       // alert(`${newName} is already added to phonebook`);
       if (
@@ -55,15 +58,26 @@ const App = () => {
           ...found,
           number: newPhoneNumber,
         };
-        phoneBook.updatePerson(found.id, newPerson).then((res) => {
-          setPersons(persons.map((p) => (p.id !== found.id ? p : res)));
-          setNewName("");
-          setNewPhoneNumber("");
-        });
-        setSuccMessage(`Phone number is chenged for ${newPerson.name}`);
-        setTimeout(() => {
-          setSuccMessage(null);
-        }, 5000);
+        phoneBook
+          .updatePerson(found.id, newPerson)
+          .then((res) => {
+            setPersons(persons.map((p) => (p.id !== found.id ? p : res)));
+            setNewName("");
+            setNewPhoneNumber("");
+            setMessage(`Phone number is chenged for ${newPerson.name}`);
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+            setMessageType("success");
+          })
+          .catch((err) => {
+            setMessage(`page Not found for ${newPerson.name}`);
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+            setPersons(persons.filter((p) => p.id !== newPerson.id));
+            setMessageType("error");
+          });
       }
     }
   };
@@ -97,7 +111,7 @@ const App = () => {
   return (
     <div>
       <Header title="Phonebook" />
-      <Notification message={succMessage} />
+      <Notification message={message} type={messageType} />
       <Filter filterValue={filterValue} handleFilter={handleFilter} />
       <Header title="Add a new" />
       <PersonForm
