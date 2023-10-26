@@ -2,55 +2,18 @@ import { useEffect, useState } from "react";
 
 //services
 import countrieService from "./services/countries";
+import weatherService from "./services/weather";
 
-const DetailInfo = ({ detailInfo }) => {
-  if (!detailInfo.length) return null;
-  let detail = detailInfo[0];
-  return (
-    <div>
-      <h1>{detail.name.common}</h1>
-      <br />
-      <p>capital {detail.capital}</p>
-      <p>area {detail.area}</p>
-      <br />
-
-      <h3>languages</h3>
-
-      <ul>
-        {Object.values(detail.languages).map((lan) => (
-          <li key={lan}>{lan}</li>
-        ))}
-      </ul>
-      <br />
-
-      <img src={detail.flags.png} />
-    </div>
-  );
-};
-
-const ListCounries = ({ filterData, detailInfo }) => {
-  if (filterData.length > 10) {
-    return <p>Too many matches, specify another filter</p>;
-  }
-  return (
-    <div>
-      {filterData.length === 1 ? null : (
-        <ul>
-          {filterData.map((c, index) => (
-            <li key={index}>{c.name.common}</li>
-          ))}
-        </ul>
-      )}
-      <DetailInfo detailInfo={detailInfo} />
-    </div>
-  );
-};
+//Components
+import ListCountries from "./components/ListCountries";
 
 const App = () => {
   const [inputValue, setInputValue] = useState("");
   const [allCountrie, setAllCountrie] = useState([]);
   const [filterData, setFilterData] = useState([]);
   const [detailInfo, setDetailInfo] = useState([]);
+  const [query, setQuery] = useState("");
+  const [weather, setWeather] = useState({});
 
   // fetch all
   useEffect(() => {
@@ -59,6 +22,7 @@ const App = () => {
     }, []);
   }, []);
 
+  // fetch detail
   useEffect(() => {
     if (filterData.length === 1) {
       countrieService.detail(filterData[0].name.common).then((data) => {
@@ -69,22 +33,50 @@ const App = () => {
     }
   }, [filterData]);
 
-  // handle quire
-  const handleInput = (event) => {
-    const query = event.target.value;
-    setInputValue(query);
+  //fetch weather
+  useEffect(() => {
+    if (detailInfo.length === 1) {
+      let lat = detailInfo[0].latlng[0];
+      let lon = detailInfo[0].latlng[1];
 
+      weatherService.getWeather(lat, lon).then((res) =>
+        setWeather({
+          temp: res.main.temp,
+          wind: res.wind.speed,
+          icon: res.weather[0].icon,
+        })
+      );
+    }
+  }, [detailInfo]);
+  //user Input
+  useEffect(() => {
     const data = allCountrie.filter((c) => {
       return c.name.common.toLowerCase().includes(query.toLowerCase());
     });
     !query ? setFilterData([]) : setFilterData(data);
+  }, [query]);
+
+  // handle quire
+  const handleInput = (event) => {
+    const queryInput = event.target.value;
+    setInputValue(queryInput);
+    setQuery(queryInput);
+  };
+
+  const handleFilter = (queryInput) => {
+    setQuery(queryInput);
   };
 
   return (
     <div>
       find countries: <input value={inputValue} onChange={handleInput} />
       {allCountrie.length ? (
-        <ListCounries filterData={filterData} detailInfo={detailInfo} />
+        <ListCountries
+          filterData={filterData}
+          detailInfo={detailInfo}
+          handleFilter={handleFilter}
+          weather={weather}
+        />
       ) : null}
     </div>
   );
