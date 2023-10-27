@@ -25,8 +25,18 @@ const persons = [
   },
 ];
 
+//persons route
 app.get("/api/persons", (req, res) => {
   res.json(persons);
+});
+
+//info route
+app.get("/info", (req, res) => {
+  res.send(
+    `<p>Phone book has info for ${
+      persons.length
+    } people</p> <p>${new Date()}</p>`
+  );
 });
 
 const PORT = 3001;
