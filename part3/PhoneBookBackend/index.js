@@ -56,29 +56,12 @@ app.delete("/api/persons/:id", (req, res) => {
 app.post("/api/persons", (req, res) => {
   const body = req.body;
 
-  if (!body.name || !body.number) {
-    return res.status(400).json({
-      error: "content-missing",
-    });
-  }
-
-  const name = persons.find((p) => p.name === body.name);
-
-  if (name) {
-    return res.status(409).json({
-      error: "name must be unique",
-    });
-  }
-
-  const person = {
+  const person = new PhoneBook({
     name: body.name,
     number: body.number,
-    id: generateId(),
-  };
+  });
 
-  persons = persons.concat(person);
-
-  res.json(person);
+  person.save().then((savePerson) => res.json(savePerson));
 });
 
 const PORT = process.env.PORT || 3001;
@@ -112,3 +95,27 @@ console.log(`Server is runing on port ${PORT}`);
 //   const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
 //   return maxId + 1;
 // };
+
+// if (!body.name || !body.number) {
+//   return res.status(400).json({
+//     error: "content-missing",
+//   });
+// }
+
+// const name = persons.find((p) => p.name === body.name);
+
+// if (name) {
+//   return res.status(409).json({
+//     error: "name must be unique",
+//   });
+// }
+
+// const person = {
+//   name: body.name,
+//   number: body.number,
+//   id: generateId(),
+// };
+
+// persons = persons.concat(person);
+
+// res.json(person);
