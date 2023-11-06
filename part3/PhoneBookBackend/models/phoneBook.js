@@ -1,39 +1,39 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
-mongoose.set("strictQuery", false);
+mongoose.set('strictQuery', false)
 
-const url = process.env.MONGODB_URL;
+const url = process.env.MONGODB_URL
 
-console.log("connecting to", url);
+console.log('connecting to', url)
 
 mongoose
   .connect(url)
-  .then((result) => {
-    console.log("connected to MongoDB");
+  .then(() => {
+    console.log('connected to MongoDB')
   })
   .catch((error) => {
-    console.log("error connecting to MongoDB:", error.message);
-  });
+    console.log('error connecting to MongoDB:', error.message)
+  })
 
 const numberValidators = [
   {
     // the minimum length validator
     validator: (number) => {
-      if ((number[2] === "-" || number[3] === "-") && number.length < 9) {
-        return false;
+      if ((number[2] === '-' || number[3] === '-') && number.length < 9) {
+        return false
       }
-      return true;
+      return true
     },
-    msg: "must be at least 8 digits",
+    msg: 'must be at least 8 digits',
   },
   {
     // the regex validator(allow only numbers)
     validator: (number) => {
-      return /^\d{2,3}-\d+$/.test(number);
+      return /^\d{2,3}-\d+$/.test(number)
     },
-    msg: "invalid phone number",
+    msg: 'invalid phone number',
   },
-];
+]
 
 const phoneBookSchema = new mongoose.Schema({
   name: {
@@ -46,14 +46,14 @@ const phoneBookSchema = new mongoose.Schema({
     validate: numberValidators,
     required: true,
   },
-});
+})
 
-phoneBookSchema.set("toJSON", {
+phoneBookSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
   },
-});
+})
 
-module.exports = mongoose.model("PhoneBook", phoneBookSchema);
+module.exports = mongoose.model('PhoneBook', phoneBookSchema)

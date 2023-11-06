@@ -1,106 +1,106 @@
-require("dotenv").config();
-const express = require("express");
-const morgan = require("morgan");
-const cors = require("cors");
-const PhoneBook = require("./models/phoneBook");
+require('dotenv').config()
+const express = require('express')
+const morgan = require('morgan')
+const cors = require('cors')
+const PhoneBook = require('./models/phoneBook')
 
-const app = express();
+const app = express()
 
-app.use(express.static("build"));
-app.use(cors());
-app.use(express.json());
+app.use(express.static('build'))
+app.use(cors())
+app.use(express.json())
 
 const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: "unknown endpoint" });
-};
+  res.status(404).send({ error: 'unknown endpoint' })
+}
 
-morgan.token("body", (req) => JSON.stringify(req.body));
+morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(
-  morgan(":method :url :status :res[content-length] - :response-time ms :body")
-);
+  morgan(':method :url :status :res[content-length] - :response-time ms :body')
+)
 
 //persons route
-app.get("/api/persons", (req, res) => {
+app.get('/api/persons', (req, res) => {
   // res.json(persons);
-  PhoneBook.find({}).then((person) => res.json(person));
-});
+  PhoneBook.find({}).then((person) => res.json(person))
+})
 
 //info route
-app.get("/info", (req, res) => {
+app.get('/info', (req, res) => {
   PhoneBook.find({}).then((person) => {
     let response = `<p>Phonebook has info for ${person.length} people</p>
-      <p>${new Date()}</p>`;
-    res.send(response);
-  });
-});
+      <p>${new Date()}</p>`
+    res.send(response)
+  })
+})
 
 //get single person
-app.get("/api/persons/:id", (req, res, next) => {
+app.get('/api/persons/:id', (req, res, next) => {
   PhoneBook.findById(req.params.id)
     .then((person) => {
       if (person) {
-        res.json(person);
+        res.json(person)
       } else {
-        res.status(404).end();
+        res.status(404).end()
       }
     })
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
 //delete
-app.delete("/api/persons/:id", (req, res, next) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   PhoneBook.findByIdAndDelete(req.params.id)
-    .then((result) => {
-      res.status(204).end();
+    .then(() => {
+      res.status(204).end()
     })
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
 //create
-app.post("/api/persons", (req, res, next) => {
-  const body = req.body;
+app.post('/api/persons', (req, res, next) => {
+  const body = req.body
 
   const person = new PhoneBook({
     name: body.name,
     number: body.number,
-  });
+  })
 
   person
     .save()
     .then((savePerson) => res.json(savePerson))
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
 //update
-app.put("/api/persons/:id", (req, res, next) => {
-  const body = req.body;
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
 
   const person = {
     name: body.name,
     number: body.number,
-  };
+  }
 
   PhoneBook.findByIdAndUpdate(req.params.id, person, { new: true })
     .then((updatedNote) => res.json(updatedNote))
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
-app.use(unknownEndpoint);
+app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) => {
-  console.error(error);
+  console.error(error)
 
-  if (error.name === "CastError") {
-    res.status(400).send({ error: "malformatted id" });
-  } else if (error.name === "ValidationError") {
-    return res.status(400).json({ error: error.message });
+  if (error.name === 'CastError') {
+    res.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return res.status(400).json({ error: error.message })
   }
 
-  next(error);
-};
+  next(error)
+}
 
-app.use(errorHandler);
+app.use(errorHandler)
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT);
-console.log(`Server is runing on port ${PORT}`);
+const PORT = process.env.PORT || 3001
+app.listen(PORT)
+console.log(`Server is runing on port ${PORT}`)
